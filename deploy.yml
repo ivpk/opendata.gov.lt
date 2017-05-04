@@ -1,0 +1,6 @@
+---
+- hosts: web
+  vars_files:
+    - secrets
+  roles:
+    - deploy

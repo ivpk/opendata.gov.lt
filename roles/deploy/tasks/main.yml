@@ -1,0 +1,95 @@
+---
+- name: install ubuntu packages
+  apt: name={{ item }}
+  with_items:
+    - apache2
+    - libapache2-mod-wsgi
+    - libapache2-mod-rpaf
+    - postfix
+    - supervisor
+
+
+- name: ckan user
+  user: name=ckan_default state=present system=yes home=/usr/lib/ckan/default
+
+- name: install ckan from source
+  include_role:
+    name: ckan
+  vars:
+    ckan_config: /etc/ckan/default/production.ini
+
+- name: create ckan storage direcotyr
+  file:
+    path: /var/lib/ckan
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0700
+
+- name: wsgi app script
+  copy:
+    src: ckan.wsgi
+    dest: /etc/ckan/default/apache.wsgi
+  notify: reload apache
+
+- name: create the apache config file
+  template:
+    src: apache.conf.j2
+    dest: /etc/apache2/sites-available/ckan_default.conf
+  notify: reload apache
+
+- name: modify the apache ports.conf file
+  lineinfile:
+    dest: /etc/apache2/ports.conf
+    regexp: "^\\s*Listen\\s+{{ item.old }}\\s*$"
+    line: "Listen {{ item.new }}"
+  with_items:
+    - {old: "80", new: "8080"}
+    - {old: "443", new: "8443"}
+  register: apache_port_changed
+
+- name: restart apache
+  service: name=apache2 state=restarted
+  when: apache_port_changed.changed
+
+- name: install ubuntu packages
+  apt: name={{ item }}
+  with_items:
+    - nginx
+
+- name: create the nginx config file
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/ckan
+  notify: reload nginx
+
+- name: enable CKAN Apache site
+  command: a2ensite ckan_default
+  args:
+    creates: /etc/apache2/sites-enabled/ckan_default.conf
+  notify: reload apache
+
+- name: disable CKAN default site
+  command: a2dissite 000-default
+  args:
+    removes: /etc/apache2/sites-enabled/000-default
+  notify: reload apache
+
+- name: disable Nginx default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+
+- name: enable CKAN Nginx site
+  file:
+    src: /etc/nginx/sites-available/ckan
+    dest: /etc/nginx/sites-enabled/ckan_default
+    state: link
+  notify: reload nginx
+
+- name: supervisor configuration file
+  template:
+    src: supervisor.conf.j2
+    dest: /etc/supervisor/conf.d/supervisor-ckan-worker.conf
+  notify: reload supervisor

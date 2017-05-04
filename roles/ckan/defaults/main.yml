@@ -1,0 +1,8 @@
+ckan_path: /usr/lib/ckan/default
+ckan_venv: /usr/lib/ckan/default
+ckan_config: /usr/lib/ckan/default/development.ini
+ckan_who_ini: /etc/ckan/default/who.ini
+ckan_home: /usr/lib/ckan/default/src/ckan
+ckan_version: 2.6.2
+ckan_user: ckan_default
+site_url: http://localhost:5000

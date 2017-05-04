@@ -1,0 +1,2 @@
+[web]
+195.182.78.3 ansible_user=ivpk ansible_become=yes

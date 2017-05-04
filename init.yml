@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars_prompt:
+    # https://github.com/ansible/ansible/issues/7742#issuecomment-116336350
+    - name: "ansible_become_pass"
+      prompt: "sudo password"
+      private: yes
+  roles:
+    - users

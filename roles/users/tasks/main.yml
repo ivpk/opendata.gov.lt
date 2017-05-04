@@ -1,0 +1,19 @@
+---
+- name: ansible user
+  user: name=ansible state=present
+
+- name: authorized keys for ansible user
+  authorized_key:
+    user: ansible
+    key: "{{ item }}"
+    exclusive: yes
+  with_items:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+tfOAGSTfn0A5f7F+8JyxDO5OPLpVaj5bwfBwRPSK53EFMUlrJ9Rl4vkpe+/IiAkhiaDhmGDZ8BL9Pjq89n8n1/kyEdsxCMfvSKBd1wWnxgW2wbMHIGsIIi9rDDsvfEq3UuLo3l1Trj3erNlmRKtKFZvGsM2kSQavpoFaIguUCMkP95PlupcKbouY0SLGj1J1TMKd3hua3JMbmwrhJNWrfMmyWmd0QF3ZYywFKDV69BKutlPAu+NfVMBv0orYPAuz+Am4nZVBNw5SDLTayprFxsdQhs+U4WaYs6CFL5DF6SBXx3ujzWvIBvCcxZy1jf45QRMYxfVBBa+CXdq4yPFN sirex@home-t450
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2ubSAsNmPDGaFxUw8PPucpRMjWuNd+8lsPdGje+iJLlY4uIZFXs71wC7qTwjAnJNs6VSAAPjslINbHayyQX6AV1NczgbEW54j+Otjo2BjQY7uDYaiSl4lTkwQG7hNFIvPrwFhOLegUqj90sPj36PxqdPII6R3YJPegjdgA4ZdQpuBmh7OCv1QJJRmgJSUFQkW5Ty+C5nfPhxpMXrZQsKmPx5xS6cdHE+W/5mtm8nHcsS77muJOwZZSeL7Sxshqz3yBwy/gCUH4pilnC421YK+di7o9OZssfl3P2QTwoXhRXq6gWveBxaJTdy2qrw4Ol4OFeiVCeYIkZOzMsNauk/P sirex@pov-t410
+
+- name: sudo rights for ansible user
+  copy:
+    dest: /etc/sudoers.d/ansible
+    content: "ansible ALL=(ALL:ALL) NOPASSWD: ALL\n"
+    mode: "0600"
+    validate: visudo -cf %s

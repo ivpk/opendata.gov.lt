@@ -1,0 +1,6 @@
+---
+- name: restart solr
+  service: name=jetty8 state=restarted
+
+- name: create ckan database tables
+  command: "{{ ckan_venv }}/bin/paster --plugin=ckan db init -c {{ ckan_config }} chdir={{ ckan_home }}"

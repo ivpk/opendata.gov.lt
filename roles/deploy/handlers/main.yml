@@ -1,0 +1,12 @@
+---
+- name: reload apache
+  service: name=apache2 state=reloaded
+
+- name: reload nginx
+  service: name=nginx state=reloaded
+
+- name: reload supervisor
+  service: name=supervisor state=reloaded
+
+- name: reload ckan worker
+  command: supervisorctl restart ckan-worker:*
