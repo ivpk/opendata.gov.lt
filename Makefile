@@ -35,4 +35,9 @@ deploy:
 
 .PHONY: local
 local:
-	ansible-playbook --ask-become-pass -c local -i inventories/local, -e ckan_path=$(PWD) local.yml
+	ansible-playbook --ask-become-pass -c local -i inventories/local -e path=$(PWD) -e user=$(USER) local.yml
+
+
+.PHONY: run
+run:
+	cd ckan/src/ckan && ../../bin/paster serve ../../development.ini

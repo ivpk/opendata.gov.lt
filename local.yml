@@ -1,4 +1,19 @@
 ---
 - hosts: web
+  vars:
+    ckan_path: "{{ path }}/ckan"
+    ckan_venv: "{{ path }}/ckan"
+    ckan_config: "{{ path }}/ckan/development.ini"
+    ckan_who_ini: "{{ path }}/ckan/who.ini"
+    ckan_home: "{{ path }}/ckan/src/ckan"
+    ckan_user: "{{ user }}"
+    ckan_storage_path: "{{ path }}/ckan"
+    secrets:
+      postgresql:
+        ckan_default: OwkOyWpWvGYHYdvLAiQOe7W7DIPGVPpG
+        datastore_default: H6As63FIMK/wUrJOqUHEstZCnRVah0Pb
   roles:
-    - deploy
+    - ckan
+  handlers:
+    - name: reload apache
+      debug: msg="reload apache"

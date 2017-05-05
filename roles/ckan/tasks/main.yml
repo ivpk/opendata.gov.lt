@@ -25,6 +25,14 @@
     editable: true
     state: present
 
+# https://github.com/getsentry/sentry/issues/3143#issuecomment-243437541
+- name: workaround for the setuptools issue
+  become_user: "{{ ckan_user }}"
+  pip:
+    executable: "{{ ckan_venv }}/bin/pip"
+    name: setuptools
+    version: 20.4
+
 - name: install ckan dependencies
   become_user: "{{ ckan_user }}"
   pip:
