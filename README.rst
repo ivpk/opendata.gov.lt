@@ -1,4 +1,4 @@
-How to prepare new server before deployment
+Ansible scripts for CKAN deployment to opendata.gov.lt
 
 
 Trhoubleshooting
