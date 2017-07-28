@@ -12,6 +12,7 @@
       postgresql:
         ckan_default: OwkOyWpWvGYHYdvLAiQOe7W7DIPGVPpG
         datastore_default: H6As63FIMK/wUrJOqUHEstZCnRVah0Pb
+      externaldb: ""
   roles:
     - ckan
   handlers:

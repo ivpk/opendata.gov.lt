@@ -42,6 +42,17 @@
     requirements: "{{ ckan_home }}/requirements.txt"
     state: present
 
+- name: install ckan extensions
+  become_user: "{{ ckan_user }}"
+  pip:
+    chdir: "{{ ckan_path }}"
+    virtualenv: "{{ ckan_venv }}"
+    virtualenv_python: python2
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git+https://github.com/okfn/ckanext-disqus#egg=ckanext-disqus
+
 - name: create ckan_default postgresql user
   become_user: postgres
   postgresql_user:
