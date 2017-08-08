@@ -100,7 +100,17 @@ solr_url = http://127.0.0.1:8983/solr
 #       Add ``datapusher`` to enable DataPusher
 #		Add ``resource_proxy`` to enable resorce proxying and get around the
 #		same origin policy
-ckan.plugins = disqus stats text_view image_view recline_view datastore
+ckan.plugins =
+    disqus
+    stats
+    text_view
+    image_view
+    recline_view
+    datastore
+    harvest
+    ckan_harvester
+    spatial_metadata
+    spatial_query
 
 # Define which views should be created by default
 # (plugins must be loaded in ckan.plugins)
@@ -197,6 +207,12 @@ odgovltimport.externaldb.url = mysql+pymysql://ckan:{{ secrets.externaldb }}@ope
 
 disqus.name = opendatagovlt
 # disqus.disqus_url =
+
+
+## Harvest integration
+# https://github.com/ckan/ckanext-harvest/
+
+ckan.harvest.mq.type = redis
 
 
 ## Logging configuration

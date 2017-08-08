@@ -2,5 +2,19 @@
 - name: restart solr
   service: name=jetty8 state=restarted
 
+- name: restart apache
+  service: name=apache2 state=restarted
+
 - name: create ckan database tables
-  command: "{{ ckan_venv }}/bin/paster --plugin=ckan db init -c {{ ckan_config }} chdir={{ ckan_home }}"
+  command: "{{ item }}"
+  with_items:
+    - "{{ ckan_venv }}/bin/paster --plugin=ckan db init -c {{ ckan_config }} chdir={{ ckan_home }}"
+    - "{{ ckan_venv }}/bin/paster --plugin=ckanext-spatial spatial initdb [srid] -c {{ ckan_config }} chdir={{ ckan_home }}"
+    - "{{ ckan_venv }}/bin/paster --plugin=ckanext-harvest harvester initdb --config={{ ckan_config}} chdir={{ ckan_home }}"
+
+- name: set up postgis
+  become_user: postgres
+  command: "{{ item }}"
+  with_items:
+    - "psql -d ckan_default -c 'ALTER VIEW geometry_columns OWNER TO ckan_default;'"
+    - "psql -d ckan_default -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'"

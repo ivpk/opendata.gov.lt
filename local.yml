@@ -18,3 +18,5 @@
   handlers:
     - name: reload apache
       debug: msg="reload apache"
+    - name: restart apache
+      debug: msg="restart apache"

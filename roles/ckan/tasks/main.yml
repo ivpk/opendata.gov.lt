@@ -9,11 +9,15 @@
     - postgresql
     - postgresql-client
     - postgresql-contrib
+    - postgis
     - libpq-dev
     - git
     - default-jdk
     - solr-jetty
     - redis-server
+    - libxml2-dev
+    - libxslt1-dev
+    - libgeos-c1v5
 
 - name: install ckan into python virtualenv
   become_user: "{{ ckan_user }}"
@@ -41,6 +45,8 @@
     virtualenv_python: python2
     requirements: "{{ ckan_home }}/requirements.txt"
     state: present
+  notify:
+    - restart apache
 
 - name: install ckan extensions
   become_user: "{{ ckan_user }}"
@@ -52,6 +58,24 @@
     state: present
   with_items:
     - git+https://github.com/okfn/ckanext-disqus#egg=ckanext-disqus
+    - git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext-harvest
+    - git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial
+  notify:
+    - restart apache
+
+# It seems that ckan folks don't know how to do proper python packaging... :/
+- name: install dependencies of ckan extensions
+  become_user: "{{ ckan_user }}"
+  pip:
+    chdir: "{{ ckan_path }}"
+    virtualenv: "{{ ckan_venv }}"
+    virtualenv_python: python2
+    requirements: "{{ ckan_path }}/src/{{ item }}"
+    state: present
+  with_items:
+    - ckanext-spatial/pip-requirements.txt
+  notify:
+    - restart apache
 
 - name: create ckan_default postgresql user
   become_user: postgres
@@ -69,7 +93,9 @@
     lc_collate: C.UTF-8
     lc_ctype: C.UTF-8
     template: template0
-  notify: create ckan database tables
+  notify:
+    - set up postgis
+    - create ckan database tables
   tags: [create_ckan_db]
 
 - name: create datastore_default postgresql user
