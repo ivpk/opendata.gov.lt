@@ -6,7 +6,7 @@ help:
 	@echo "make [check] <env> deploy    do the deployment"
 	@echo "make check <env> <playbook>  check ansible playbook without changing anything"
 	@echo ""
-	@echo "Environments: staging"
+	@echo "<env> can be one of these: staging"
 
 
 .PHONY: check

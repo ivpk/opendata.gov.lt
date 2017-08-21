@@ -73,6 +73,7 @@
     requirements: "{{ ckan_path }}/src/{{ item }}"
     state: present
   with_items:
+    - ckanext-harvest/pip-requirements.txt
     - ckanext-spatial/pip-requirements.txt
   notify:
     - restart apache
