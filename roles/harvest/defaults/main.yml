@@ -1,0 +1,4 @@
+ckan_path: /usr/lib/ckan/default
+ckan_config: /usr/lib/ckan/default/development.ini
+ckan_user: ckan_default
+ckan_log_dir: /var/log/ckan

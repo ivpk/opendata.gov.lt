@@ -1,6 +1,9 @@
 ---
 - hosts: web
+  vars:
+    ckan_config: /etc/ckan/default/production.ini
   vars_files:
     - secrets
   roles:
     - deploy
+    - harvest

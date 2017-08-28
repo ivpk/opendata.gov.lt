@@ -15,10 +15,8 @@
 - name: install ckan from source
   include_role:
     name: ckan
-  vars:
-    ckan_config: /etc/ckan/default/production.ini
 
-- name: create ckan storage direcotyr
+- name: create ckan storage directory
   file:
     path: /var/lib/ckan
     state: directory

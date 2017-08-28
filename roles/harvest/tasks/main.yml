@@ -1,0 +1,51 @@
+---
+- name: install ubuntu packages
+  apt: name={{ item }}
+  with_items:
+    - supervisor
+
+- name: supervisord configuration file for ckan harvester
+  template:
+    src: ckan_harvesting.conf.j2
+    dest: /etc/supervisor/conf.d/ckan_harvesting.conf
+  notify:
+    - restart supervisord
+  register: supervisor_config
+
+- name: reload supervisor
+  service: name=supervisor state=reloaded
+  when: supervisor_config.changed
+
+- name: start supervisor
+  service: name=supervisor state=started
+
+- name: make sure log directory exists
+  file:
+    path: "{{ ckan_log_dir }}"
+    state: directory
+    mode: 0755
+    owner: "{{ ckan_user }}"
+
+- name: start gather consumer
+  supervisorctl:
+    name: ckan_gather_consumer
+    state: started
+
+- name: start fetch consumer
+  supervisorctl:
+    name: ckan_fetch_consumer
+    state: started
+
+- name: cron entry for harvester run command
+  cron:
+    name: "run ckan harvester"
+    minute: "*/15"
+    job: "{{ ckan_path }}/bin/paster --plugin=ckanext-harvest harvester run --config={{ ckan_config }}"
+
+
+- name: cron entry for cleaning ckan harvester logs
+  cron:
+    name: "clean harvest log"
+    minute: "0"
+    hour: "5"
+    job: "{{ ckan_path }}/bin/paster --plugin=ckanext-harvest harvester clean_harvest_log --config={{ ckan_config }}"
