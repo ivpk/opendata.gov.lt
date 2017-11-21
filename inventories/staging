@@ -1,2 +1,2 @@
 [web]
-195.182.78.3 ansible_user=ansible ansible_become=yes
+ckan.opendata.gov.lt ansible_user=ansible ansible_become=yes
