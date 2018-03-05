@@ -24,7 +24,7 @@
     path: "{{ ckan_log_dir }}"
     state: directory
     mode: 0755
-    owner: "{{ ckan_user }}"
+    owner: www-data
 
 - name: start gather consumer
   supervisorctl:

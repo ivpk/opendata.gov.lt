@@ -20,3 +20,12 @@
     - "{{ ckan_venv }}/bin/paster --plugin=ckan db init -c {{ ckan_config }} chdir={{ ckan_home }}"
     - "{{ ckan_venv }}/bin/paster --plugin=ckanext-spatial spatial initdb -c {{ ckan_config }} chdir={{ ckan_home }}"
     - "{{ ckan_venv }}/bin/paster --plugin=ckanext-harvest harvester initdb --config={{ ckan_config}} chdir={{ ckan_home }}"
+
+- name: restart ckan harvest services
+  supervisorctl:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - ckan_fetch_consumer
+    - ckan_gather_consumer
+

@@ -64,6 +64,17 @@
   notify:
     - restart apache
 
+- name: update odgovlt-mysql-import repository
+  become_user: "{{ ckan_user }}"
+  git:
+    repo: https://github.com/ivpk/opendata.gov.lt-mysql-import.git
+    dest: "{{ ckan_venv }}//src/opendata.gov.lt-mysql-import"
+    version: master
+    clone: no
+  notify:
+    - restart apache
+    - restart ckan harvest services
+
 # It seems that ckan folks don't know how to do proper python packaging... :/
 - name: install dependencies of ckan extensions
   become_user: "{{ ckan_user }}"
@@ -92,8 +103,8 @@
     name: ckan_default
     owner: ckan_default
     encoding: UTF-8
-    lc_collate: C.UTF-8
-    lc_ctype: C.UTF-8
+    lc_collate: en_US.UTF-8
+    lc_ctype: en_US.UTF-8
     template: template0
   notify:
     - set up postgis
