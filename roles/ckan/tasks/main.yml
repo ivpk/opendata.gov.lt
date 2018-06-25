@@ -60,7 +60,7 @@
     - git+https://github.com/okfn/ckanext-disqus#egg=ckanext-disqus
     - git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext-harvest
     - git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial
-    - git+https://github.com/ivpk/opendata.gov.lt-mysql-import.git#egg=odgovlt-mysql-import
+    - git+https://github.com/JustNindze/opendata.gov.lt-mysql-import.git@harvest-opendatagovlt8#egg=odgovlt-mysql-import
   notify:
     - restart apache
 
